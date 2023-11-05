@@ -1,0 +1,20 @@
+USE classicmodels;
+
+/*1*/
+SELECT * FROM Customers WHERE city IN ('Nantes','Lyon');
+
+SELECT * FROM Customers WHERE city = 'Nantes' OR city = 'Lyon';
+
+/*2*/
+SELECT * FROM Orders WHERE shippedDate BETWEEN '2003/01/10' AND '2003/03/10';
+
+SELECT * FROM Orders WHERE shippedDate >= '2003/01/10' AND shippedDate <= '2003/03/10';
+
+/*3*/
+SELECT * FROM Products WHERE productLine LIKE '%cars%';
+
+/*4*/
+SELECT productName,quantityInStock FROM Products ORDER BY quantityInStock DESC LIMIT 10;
+
+/*5*/
+SELECT productName, (quantityInStock*buyPrice) as total FROM products;

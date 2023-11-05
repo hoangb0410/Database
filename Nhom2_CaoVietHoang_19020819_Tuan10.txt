@@ -1,0 +1,44 @@
+/* Cau 1 */
+	/* Truy van con */
+SELECT p.productCode, p.productName
+FROM products p
+WHERE productCode IN (SELECT od.productCode FROM orderdetails od 
+                      WHERE orderNumber IN (SELECT o.orderNumber FROM orders o 
+                                          WHERE YEAR(o.orderDate)=2005 AND MONTH(o.orderDate)=3));
+	/* Su dung Join */
+SELECT p.productCode, p.productName
+FROM `products` p
+INNER JOIN orderdetails od ON p.productCode=od.productCode
+INNER JOIN orders o ON od.orderNumber=o.orderNumber
+WHERE extract(YEAR FROM `orderDate`)=2005 AND extract(MONTH FROM `orderDate`)= 3
+GROUP BY p.productCode;
+
+/* Cau 2 */
+SELECT * FROM orders 
+WHERE MONTH(`orderDate`) = (SELECT MONTH(MAX(`orderDate`)) FROM orders) 
+		AND YEAR(`orderDate`) = (SELECT YEAR(MAX(`orderDate`)) FROM orders);
+
+/* Cau 3 */
+	/* Truy van con */
+SELECT o.orderNumber, o.orderDate, 
+(SELECT SUM(od.quantityOrdered*od.priceEach) FROM orderdetails od WHERE `orderNumber`=o.orderNumber) AS TongGiaTri
+FROM `orders` o;
+	/* Su dung Join */
+SELECT o.orderNumber,o.orderDate,SUM(od.quantityOrdered*od.priceEach) as TongGiaTri FROM `orders` o 
+INNER JOIN orderdetails od ON o.orderNumber=od.orderNumber
+GROUP BY o.orderNumber;
+
+/* Cau 4 */
+SELECT Customers_Payments.customerName, (Orders_Orderdetails.total - Customers_Payments.paid) as Debt
+FROM 
+	(SELECT payments.customerNumber, customers.customerName, sum(payments.amount) AS paid
+	FROM payments, customers
+	WHERE customers.customerNumber = payments.customerNumber GROUP BY customers.customerNumber) AS Customers_Payments
+	INNER JOIN(
+	(SELECT orders.customerNumber, sum(orderdetails.quantityOrdered * orderdetails.priceEach) AS total 
+	FROM orderdetails, orders 
+	WHERE orders.orderNumber = orderdetails.orderNumber GROUP BY orders.customerNumber) AS Orders_Orderdetails
+	)
+	ON Orders_Orderdetails.customerNumber = Customers_Payments.customerNumber
+WHERE (Orders_Orderdetails.total - Customers_Payments.paid) <> 0 
+GROUP BY Orders_Orderdetails.customerNumber;

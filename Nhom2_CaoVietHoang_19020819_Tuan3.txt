@@ -1,0 +1,17 @@
+USE classicmodels;
+
+/*1*/
+SELECT * FROM Employees WHERE reportsTo is NULL;
+
+/*2*/
+SELECT DISTINCT CustomerNumber FROM Payments; 
+
+/*3*/
+SELECT * FROM Orders WHERE requiredDate = '2003/01/18';
+
+/*4*/
+SELECT * FROM Orders WHERE YEAR(orderDate) = 2005 and MONTH(orderDate) = 4 and status = 'Shipped'; 
+
+/*5*/
+SELECT * FROM Products WHERE productLine = 'Classic Cars';
+

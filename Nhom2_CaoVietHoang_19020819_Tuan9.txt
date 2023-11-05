@@ -1,0 +1,26 @@
+/*1*/
+SELECT e.*, o.addressLine1
+FROM employees e
+INNER JOIN offices o ON e.officeCode=e.officeCode;
+
+/*2*/
+SELECT p.productCode, p.productName, od.orderNumber FROM products p 
+LEFT JOIN orderdetails od ON p.productCode = od.productCode 
+WHERE orderNumber is NULL;
+
+/*3*/
+SELECT o.orderDate,o.requiredDate,o.status, od.quantityOrdered*od.priceEach FROM orders o
+INNER JOIN orderdetails od
+WHERE EXTRACT(YEAR FROM o.orderDate)=2003 AND EXTRACT(MONTH FROM o.orderDate) =3
+
+/*4*/
+SELECT pl.*, SUM(p.quantityInStock) AS tonkho FROM productlines pl 
+INNER JOIN products p ON pl.productLine = p.productLine
+GROUP BY pl.productLine
+ORDER BY tonkho DESC
+
+/*5*/
+SELECT CONCAT(c.`contactLastName`," ",c.`contactFirstName`) AS FULLNAME, SUM(`amount`) as TIENMUA
+FROM `customers` c
+LEFT JOIN payments p ON c.customerNumber=p.customerNumber
+GROUP BY c.customerNumber

@@ -1,0 +1,22 @@
+USE classicmodels;
+
+/*1*/
+SELECT `productCode`, `productName`, substring(`productDescription`,1,50) as "Title of products" FROM `products`;
+
+/*2*/
+SELECT concat(lastName," ",firstName,", ",jobTitle) FROM `employees`;
+
+/*3*/
+UPDATE productlines
+SET `productLine` = REPLACE(`productLine`,"Cars","Automobiles");
+
+/*4*/
+SELECT orderNumber, datediff(requiredDate,shippedDate) as daysLeft 	
+FROM `orders` 
+WHERE shippedDate is NOT NULL
+ORDER BY daysLeft DESC LIMIT 5;	
+
+/*5*/
+SELECT `orderNumber`,`orderDate`,`shippedDate` FROM `orders` 
+WHERE EXTRACT(YEAR FROM orderDate) = 2005 AND EXTRACT(MONTH FROM orderDate) = 5 
+AND shippedDate IS NULL;

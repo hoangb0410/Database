@@ -1,0 +1,31 @@
+USE classicmodels;
+/*1*/
+SELECT city, COUNT(*) AS count_cus FROM customers 
+GROUP BY city;
+
+/*2*/
+/*2.1*/
+SELECT count(*) FROM orders
+WHERE EXTRACT(month from orderDate) = 3 AND EXTRACT(year from orderDate) = 2005; 
+/*2.2*/
+SELECT MONTH(orderDate) AS month,
+count(*) AS orderCount FROM orders
+WHERE YEAR(orderDate) = 2005
+GROUP BY MONTH(orderDate)
+ORDER BY MONTH(orderDate) ASC;
+
+/*Bai 3*/
+SELECT orderNumber,(priceEach*quantityOrdered) AS total
+FROM orderdetails 
+GROUP BY orderNumber 
+ORDER BY total DESC LIMIT 10;
+
+/*Bai 4*/
+SELECT productCode, sum(quantityInStock)
+FROM products 
+GROUP BY productLine;
+
+/*Bai 5*/
+SELECT customerNumber,sum(amount) AS total 
+FROM payments 
+GROUP BY customerNumber;

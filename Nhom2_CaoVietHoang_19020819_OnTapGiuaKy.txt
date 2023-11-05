@@ -1,0 +1,39 @@
+USE classicmodels;
+/*Câu 1*/
+SELECT DISTINCT offices.officeCode,offices.addressLine1,offices.addressLine2,offices.phone, COUNT(*) AS No_Employee
+FROM offices
+INNER JOIN employees ON offices.officeCode = employees.officeCode
+GROUP BY officeCode;
+
+/*Câu 2*/
+SELECT productlines.productLine, productlines.textDescription, SUM(orderdetails.quantityOrdered) as totalSold
+FROM productlines 
+INNER JOIN products ON productlines.productLine = products.productLine
+INNER JOIN orderdetails ON products.productCode = orderdetails.productCode
+GROUP BY productLine;
+
+/*Câu 3*/
+SELECT customers.customerName,
+SUM(orderdetails.quantityOrdered*orderdetails.priceEach) AS tienMUA, 
+payments.amount AS TienTra,
+SUM(orderdetails.quantityOrdered*orderdetails.priceEach)-payments.amount AS TienNo
+FROM payments
+INNER JOIN customers ON payments.customerNumber=customers.customerNumber
+INNER JOIN orders ON payments.customerNumber=orders.customerNumber
+INNER JOIN orderdetails ON orders.orderNumber=orderdetails.orderNumber
+GROUP BY customers.customerName
+HAVING tienMUA <=100000; 
+
+/*Câu 4*/
+SELECT products.productCode, COUNT(*) as Sold_Quantity
+FROM products 
+INNER JOIN orderdetails ON products.productCode = orderdetails.productCode
+INNER JOIN orders ON orderdetails.orderNumber = orders.orderNumber
+WHERE orders.status <> 'cancelled'
+GROUP BY productCode
+ORDER BY productCode ASC;
+
+/*Câu 5*/
+CREATE TABLE new_payments LIKE payments;
+INSERT INTO new_payments SELECT * FROM payments WHERE amount>50000;
+
